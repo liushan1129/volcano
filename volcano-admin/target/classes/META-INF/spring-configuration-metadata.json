@@ -1,0 +1,38 @@
+{
+  "groups": [
+    {
+      "name": "spring.datasource.druid",
+      "type": "javax.sql.DataSource",
+      "sourceType": "com.mdd.admin.config.DruidConfig",
+      "sourceMethod": "druidDataSource()"
+    }
+  ],
+  "properties": [
+    {
+      "name": "like.captcha.expire",
+      "type": "java.lang.String",
+      "description": "Description for like.captcha.expire."
+    },
+    {
+      "name": "like.captcha.status",
+      "type": "java.lang.String",
+      "description": "Description for like.captcha.status."
+    },
+    {
+      "name": "like.captcha.token",
+      "type": "java.lang.String",
+      "description": "Description for like.captcha.token."
+    },
+    {
+      "name": "like.production",
+      "type": "java.lang.String",
+      "description": "Description for like.production."
+    },
+    {
+      "name": "like.upload-directory",
+      "type": "java.lang.String",
+      "description": "Description for like.upload-directory."
+    }
+  ],
+  "hints": []
+}

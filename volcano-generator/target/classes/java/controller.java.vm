@@ -1,0 +1,132 @@
+package ${packageName}.admin.controller;
+
+#if(!$table.genTpl.equals("crud"))
+import com.alibaba.fastjson2.JSONArray;
+#end
+import ${packageName}.admin.config.aop.Log;
+import ${packageName}.admin.service.I${EntityName}Service;
+import ${packageName}.admin.validate.commons.IdValidate;
+import ${packageName}.admin.validate.${EntityName}CreateValidate;
+import ${packageName}.admin.validate.${EntityName}UpdateValidate;
+import ${packageName}.admin.validate.${EntityName}SearchValidate;
+#if($table.genTpl.equals("crud"))
+import ${packageName}.admin.validate.commons.PageValidate;
+import ${packageName}.admin.vo.${EntityName}ListedVo;
+#end
+import ${packageName}.admin.vo.${EntityName}DetailVo;
+import ${packageName}.common.core.AjaxResult;
+#if($table.genTpl.equals("crud"))
+import ${packageName}.common.core.PageResult;
+#end
+import ${packageName}.common.validator.annotation.IDMust;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+
+#set($isAuthor = !$authorName.equals(""))
+/**
+ * ${functionName}管理
+#if($isAuthor)
+ * @author ${authorName}
+#end
+ */
+@RestController
+@RequestMapping("api/${moduleName}")
+public class ${EntityName}Controller {
+
+    @Resource
+    I${EntityName}Service i${EntityName}Service;
+
+    /**
+     * ${functionName}列表
+     *
+     #if(!$authorName.equals(""))
+     * @author ${authorName}
+     #end
+     #if($table.genTpl.equals("crud"))
+     * @param pageValidate 分页参数
+     #end
+     * @param searchValidate 搜索参数
+     * @return AjaxResult<Object>
+     */
+    #if($table.genTpl.equals("crud"))
+    @GetMapping("/list")
+    public AjaxResult<PageResult<${EntityName}ListedVo>> list(@Validated PageValidate pageValidate,
+                                                     @Validated ${EntityName}SearchValidate searchValidate) {
+        PageResult<${EntityName}ListedVo> list = i${EntityName}Service.list(pageValidate, searchValidate);
+        return AjaxResult.success(list);
+    }
+    #else
+    @GetMapping("/list")
+    public AjaxResult<JSONArray> list(@Validated ${EntityName}SearchValidate searchValidate) {
+        JSONArray list = i${EntityName}Service.list(searchValidate);
+        return AjaxResult.success(list);
+    }
+    #end
+
+    /**
+     * ${functionName}详情
+     *
+     #if(!$authorName.equals(""))
+     * @author ${authorName}
+     #end
+     * @param id 主键ID
+     * @return AjaxResult<${EntityName}DetailVo>
+     */
+    @GetMapping("/detail")
+    public AjaxResult<${EntityName}DetailVo> detail(@Validated @IDMust() @RequestParam("id") Integer id) {
+        ${EntityName}DetailVo detail = i${EntityName}Service.detail(id);
+        return AjaxResult.success(detail);
+    }
+
+    /**
+     * ${functionName}新增
+     *
+     #if(!$authorName.equals(""))
+     * @author ${authorName}
+     #end
+     * @param createValidate 参数
+     * @return AjaxResult<Object>
+     */
+    @Log(title = "${functionName}新增")
+    @PostMapping("/add")
+    public AjaxResult<Object> add(@Validated @RequestBody ${EntityName}CreateValidate createValidate) {
+        i${EntityName}Service.add(createValidate);
+        return AjaxResult.success();
+    }
+
+    /**
+     * ${functionName}编辑
+     *
+     #if(!$authorName.equals(""))
+     * @author ${authorName}
+     #end
+     * @param updateValidate 参数
+     * @return AjaxResult<Object>
+     */
+    @Log(title = "${functionName}编辑")
+    @PostMapping("/edit")
+    public AjaxResult<Object> edit(@Validated @RequestBody ${EntityName}UpdateValidate updateValidate) {
+        i${EntityName}Service.edit(updateValidate);
+        return AjaxResult.success();
+    }
+
+    /**
+     * ${functionName}删除
+     *
+     #if(!$authorName.equals(""))
+     * @author ${authorName}
+     #end
+     * @param idValidate 参数
+     * @return AjaxResult<Object>
+     */
+    @Log(title = "${functionName}删除")
+    @PostMapping("/del")
+    public AjaxResult<Object> del(@Validated @RequestBody IdValidate idValidate) {
+        #set($AttrName=$primaryKey.substring(0,1).toUpperCase() + ${primaryKey.substring(1)})
+        i${EntityName}Service.del(idValidate.getId());
+        return AjaxResult.success();
+    }
+
+}
