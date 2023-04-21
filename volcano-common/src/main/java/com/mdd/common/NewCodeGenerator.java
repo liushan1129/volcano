@@ -19,6 +19,7 @@ import java.util.Collections;
 public class NewCodeGenerator {
     @Test
     public void run() {
+        System.out.println(System.getProperty("user.dir"));
         FastAutoGenerator.create("jdbc:mysql://127.0.0.1:3306/volcano?useUnicode=true&characterEncoding=utf8",
                         "root", "root")
                 .globalConfig(builder -> {
@@ -44,7 +45,7 @@ public class NewCodeGenerator {
                 })
 
                 .strategyConfig(builder -> {
-                    builder.addInclude("tb_banner") // 设置需要生成的表名 可边长参数“user”, “user1”
+                    builder.addInclude("va_reservation_record") // 设置需要生成的表名 可边长参数“user”, “user1”
                             .addTablePrefix("va_", "c_") // 设置过滤表前缀
                             .serviceBuilder()//service策略配置
                             .formatServiceFileName("%sService")

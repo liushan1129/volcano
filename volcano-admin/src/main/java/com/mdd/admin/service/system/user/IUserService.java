@@ -5,6 +5,7 @@ import com.mdd.admin.dto.system.user.SystemUserBasicListDTO;
 import com.mdd.admin.dto.system.user.SystemUserSelvesDTO;
 import com.mdd.admin.validate.commons.PageValidate;
 import com.mdd.admin.validate.system.*;
+import com.mdd.admin.validate.system.condition.SystemUserQueryCondition;
 import com.mdd.common.core.PageResult;
 
 import java.util.List;
@@ -90,4 +91,5 @@ public interface IUserService {
      */
     void cacheAdminUserByUid(Long id);
 
+    List<SystemUserBasicListDTO> listByCondition(SystemUserQueryCondition queryCondition);
 }

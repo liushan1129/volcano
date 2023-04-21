@@ -71,16 +71,6 @@ public class UserBasic implements Serializable {
     private Integer height;
 
     /**
-     * 用户类型ID
-     */
-    private Integer userTypeId;
-
-    /**
-     * 课程类型ID
-     */
-    private Integer courseTypeId;
-
-    /**
      * 用户密码
      */
     private String password;

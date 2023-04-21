@@ -10,6 +10,7 @@ import com.mdd.admin.validate.system.SystemUserCreateValidate;
 import com.mdd.admin.validate.system.SystemUserSearchValidate;
 import com.mdd.admin.validate.system.SystemUserUpInfoValidate;
 import com.mdd.admin.validate.system.SystemUserUpdateValidate;
+import com.mdd.admin.validate.system.condition.SystemUserQueryCondition;
 import com.mdd.admin.vo.system.user.SystemUserDetailVo;
 import com.mdd.admin.vo.system.user.SystemUserListVo;
 import com.mdd.admin.vo.system.user.SystemUserSelvesVo;
@@ -35,19 +36,14 @@ public class SystemUserController {
 
     /**
      * 管理员列表
-     *
-     * @author fzr
-     * @param pageValidate 分页参数
+     ** @param pageValidate 分页参数
      * @param searchValidate 搜索参数
      * @return AjaxResult<PageResult<SystemAuthAdminListedVo>>
      */
     @GetMapping("/list")
     public AjaxResult<PageResult<SystemUserListVo>> list(@Validated PageValidate pageValidate,
                                                          @Validated SystemUserSearchValidate searchValidate) {
-        long before = System.currentTimeMillis();
         PageResult<SystemUserBasicListDTO> pageResult = iUserService.list(pageValidate, searchValidate);
-        long behind = System.currentTimeMillis();
-        System.out.println("..........查詢列表耗時：" + (behind - before));
         List<SystemUserListVo> list = DozerUtils.mapList(pageResult.getLists(), SystemUserListVo.class);
         PageResult result = new PageResult<>();
         result.setCount(pageResult.getCount());
@@ -57,11 +53,16 @@ public class SystemUserController {
         return AjaxResult.success(result);
     }
 
+    @GetMapping("/getListByCondition")
+    public AjaxResult<List<SystemUserListVo>> getListByCondition(@Validated SystemUserQueryCondition queryCondition) {
+        List<SystemUserBasicListDTO> list = iUserService.listByCondition(queryCondition);
+        List<SystemUserListVo> result = DozerUtils.mapList(list, SystemUserListVo.class);
+        return AjaxResult.success(result);
+    }
+
     /**
      * 管理员信息
-     *
-     * @author fzr
-     * @return AjaxResult<SystemUserSelvesVo>
+     ** @return AjaxResult<SystemUserSelvesVo>
      */
     @GetMapping("/self")
     public AjaxResult<SystemUserSelvesVo> self() {
@@ -76,7 +77,6 @@ public class SystemUserController {
     /**
      * 管理员详情
      *
-     * @author fzr
      * @param id 主键
      * @return AjaxResult<SystemAuthAdminDetailVo>
      */
@@ -90,7 +90,6 @@ public class SystemUserController {
     /**
      * 管理员新增
      *
-     * @author fzr
      * @param createValidate 参数
      * @return AjaxResult<Object>
      */
@@ -104,7 +103,6 @@ public class SystemUserController {
     /**
      * 管理员编辑
      *
-     * @author fzr
      * @param updateValidate 参数
      * @return AjaxResult<Object>
      */
@@ -119,8 +117,6 @@ public class SystemUserController {
 
     /**
      * 当前管理员更新
-     *
-     * @author fzr
      * @return AjaxResult<Object>
      */
     @Log(title = "管理员更新")
@@ -133,8 +129,6 @@ public class SystemUserController {
 
     /**
      * 管理员删除
-     *
-     * @author fzr
      * @return AjaxResult<Object>
      */
     @Log(title = "管理员删除")
@@ -148,8 +142,6 @@ public class SystemUserController {
 
     /**
      * 管理员状态切换
-     *
-     * @author fzr
      * @return AjaxResult<Object>
      */
     @Log(title = "管理员状态")
@@ -159,5 +151,4 @@ public class SystemUserController {
         iUserService.disable(idValidate.getId().longValue(), adminId);
         return AjaxResult.success();
     }
-
 }

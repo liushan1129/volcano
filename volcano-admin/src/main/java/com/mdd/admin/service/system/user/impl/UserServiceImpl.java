@@ -15,6 +15,7 @@ import com.mdd.admin.repo.SystemMenuRepo;
 import com.mdd.admin.repo.SystemRoleRepo;
 import com.mdd.admin.validate.commons.PageValidate;
 import com.mdd.admin.validate.system.*;
+import com.mdd.admin.validate.system.condition.SystemUserQueryCondition;
 import com.mdd.common.core.PageResult;
 import com.mdd.common.entity.system.SystemAuthDept;
 import com.mdd.common.entity.system.SystemAuthMenu;
@@ -116,7 +117,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public SystemUserSelvesDTO self(Long adminId) {
         // 管理员信息
-        UserBasic userBasic = userBasicRepo.queryListById(adminId);
+        UserBasic userBasic = userBasicRepo.queryById(adminId);
         SystemUserDetailsDTO userDetailsDTO = DozerUtils.map(userBasic, SystemUserDetailsDTO.class);
         buildUserDetailsOtherProperties(userDetailsDTO, userBasic);
 
@@ -170,7 +171,7 @@ public class UserServiceImpl implements IUserService {
      */
     @Override
     public SystemUserDetailsDTO detail(Long id) {
-        UserBasic userBasic = userBasicRepo.queryListById(id);
+        UserBasic userBasic = userBasicRepo.queryById(id);
         Assert.notNull(userBasic, "账号已不存在！");
         SystemUserDetailsDTO dto = DozerUtils.map(userBasic, SystemUserDetailsDTO.class);
         buildUserDetailsOtherProperties(dto, userBasic);
@@ -200,14 +201,9 @@ public class UserServiceImpl implements IUserService {
         model.setRoleIds(ArrayUtils.listToStringByLong(createValidate.getRoleIdList(), ","));
         model.setDeptIds(ArrayUtils.listToStringByLong(createValidate.getDeptIdList(), ","));
         model.setPostIds(ArrayUtils.listToStringByLong(createValidate.getPostIdList(), ","));
-//        model.setUsername(createValidate.getUsername());
-//        model.setNickname(createValidate.getNickname());
         model.setAvatar(avatar);
         model.setPassword(pwd);
         model.setSalt(salt);
-//        model.setSort(createValidate.getSort());
-//        model.setIsMultipoint(createValidate.getIsMultipoint());
-//        model.setIsDisable(createValidate.getIsDisable());
         model.setCreateTime(System.currentTimeMillis() / 1000);
         model.setUpdateTime(System.currentTimeMillis() / 1000);
         userBasicMapper.insert(model);
@@ -226,25 +222,22 @@ public class UserServiceImpl implements IUserService {
         String[] field = {"id", "username", "nickname", "role_ids"};
         Long userId = updateValidate.getId().longValue();
         UserBasic userBasic = userBasicRepo.queryFieldByCondition(userId, null, null, field);
+        Assert.notNull(userBasic, "账号不存在了!");
         List<Long> userRoleIds = ArrayUtils.stringToListAsLong(userBasic.getRoleIds(), ",");
         if(!roleIds.isEmpty() && userRoleIds.contains(SpecialRoleEnum.SUPER_ADMIN.getCode())) {
             throw new OperateException("超级管理员信息不可修改!");
         }
-        Assert.notNull(userBasic, "账号不存在了!");
         if(updateValidate.getId() != null && updateValidate.getId().longValue() != userBasic.getId()) {
             Assert.isNull(userBasicRepo.queryFieldByCondition(null, updateValidate.getUsername(), null, field)
                     , "账号已存在换一个吧!");
             Assert.isNull(userBasicRepo.queryFieldByCondition(null, null, updateValidate.getNickname(), field)
                     , "昵称已存在换一个吧!");
         }
-
         UserBasic model = DozerUtils.map(updateValidate, UserBasic.class);
         model.setRoleIds(ArrayUtils.listToStringByLong(updateValidate.getRoleIdList(), ","));
         model.setDeptIds(ArrayUtils.listToStringByLong(updateValidate.getDeptIdList(), ","));
         model.setPostIds(ArrayUtils.listToStringByLong(updateValidate.getPostIdList(), ","));
-
         model.setUpdateTime(System.currentTimeMillis() / 1000);
-
         if (StringUtils.isNotNull(updateValidate.getPassword()) && StringUtils.isNotEmpty(updateValidate.getPassword())) {
             String salt = ToolsUtils.randomString(SALT_RANDOM);
             String pwd = ToolsUtils.makeMd5( updateValidate.getPassword().trim() + salt);
@@ -254,10 +247,8 @@ public class UserServiceImpl implements IUserService {
             model.setPassword(userBasic.getPassword());
             model.setSalt(userBasic.getSalt());
         }
-
         userBasicMapper.updateById(model);
         this.cacheAdminUserByUid(updateValidate.getId().longValue());
-
         if (StringUtils.isNotNull(updateValidate.getPassword()) && StringUtils.isNotEmpty(updateValidate.getPassword())) {
             StpUtil.kickout(updateValidate.getId());
         }
@@ -375,6 +366,13 @@ public class UserServiceImpl implements IUserService {
         map.put(String.valueOf(userBasic.getId()), JSON.toJSONString(user));
 
         RedisUtils.hmSet(AdminConfig.backstageManageKey, map);
+    }
+
+    @Override
+    public List<SystemUserBasicListDTO> listByCondition(SystemUserQueryCondition queryCondition) {
+        List<UserBasic> userBasicList = userBasicRepo.queryListByCondition(queryCondition);
+        List<SystemUserBasicListDTO> dtos = DozerUtils.mapList(userBasicList, SystemUserBasicListDTO.class);
+        return dtos;
     }
 
 }
