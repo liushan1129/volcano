@@ -5,8 +5,12 @@ import com.mdd.admin.dto.group.GroupDTO;
 import com.mdd.admin.dto.member.MemberDTO;
 import com.mdd.admin.validate.*;
 import com.mdd.admin.validate.commons.PageValidate;
+import com.mdd.admin.validate.system.condition.GroupQueryCondition;
+import com.mdd.admin.validate.system.condition.MemberQueryCondition;
 import com.mdd.common.core.PageResult;
 import com.mdd.common.entity.group.Group;
+
+import java.util.List;
 
 /**
  * <p>
@@ -27,4 +31,5 @@ public interface IGroupService extends IService<Group> {
 
     void del(long longValue);
 
+    List<GroupDTO> listByCondition(GroupQueryCondition queryCondition);
 }

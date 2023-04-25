@@ -1,5 +1,9 @@
 package com.mdd.admin.dto.reservation;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -13,17 +17,27 @@ public class ReservationDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long id;
+    private Long groupId;
 
-    private Integer type;
 
-    private String typeName;
+    private Long userId;
 
-    private String name;
 
-    private Integer times;
+    private String memberIds;
 
-    private String createTime;
+    private Integer reservationTime;
+
+
+    private Integer status;
+
+
+    private Long createTime;
+
+
+    private Long updateTime;
+
+
+    private Long cancelTime;
 
 
 }

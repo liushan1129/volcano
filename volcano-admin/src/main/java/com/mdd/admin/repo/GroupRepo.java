@@ -9,15 +9,19 @@ import com.mdd.admin.dto.group.GroupDTO;
 import com.mdd.admin.validate.CourseTypeSearchValidate;
 import com.mdd.admin.validate.GroupSearchValidate;
 import com.mdd.admin.validate.commons.PageValidate;
+import com.mdd.admin.validate.system.condition.GroupQueryCondition;
+import com.mdd.admin.validate.system.condition.MemberQueryCondition;
 import com.mdd.common.entity.course.CourseType;
 import com.mdd.common.entity.group.Group;
 import com.mdd.common.entity.member.Member;
 import com.mdd.common.mapper.course.CourseTypeMapper;
 import com.mdd.common.mapper.group.GroupMapper;
+import com.mdd.common.util.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author liushan
@@ -48,7 +52,7 @@ public class GroupRepo {
         groupMapper.setSearch(mpjQueryWrapper, searchValidate, new String[]{
                 "like:name:str",
                 "=:username:str",
-                "like:member_names:str"
+                "like:memberName@member_names:str"
         });
 
         IPage<GroupDTO> iPage = groupMapper.selectJoinPage(
@@ -66,4 +70,16 @@ public class GroupRepo {
         return groupMapper.selectOne(queryWrapper);
     }
 
+    public List<Group> queryByCondition(GroupQueryCondition queryCondition) {
+        QueryWrapper queryWrapper = new QueryWrapper<Group>();
+        if(queryCondition != null && queryCondition.getId() != null) {
+            queryWrapper.eq("id", queryCondition.getId());
+        }
+        if(queryCondition != null && StringUtils.isNotBlank(queryCondition.getName())) {
+            queryWrapper.like("name", queryCondition.getName());
+
+        }
+        queryWrapper.eq("is_delete", 0);
+        return groupMapper.selectList(queryWrapper);
+    }
 }

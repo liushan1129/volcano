@@ -17,6 +17,8 @@ import com.mdd.admin.service.ICourseTypeService;
 import com.mdd.admin.service.IGroupService;
 import com.mdd.admin.validate.*;
 import com.mdd.admin.validate.commons.PageValidate;
+import com.mdd.admin.validate.system.condition.GroupQueryCondition;
+import com.mdd.admin.validate.system.condition.MemberQueryCondition;
 import com.mdd.common.core.PageResult;
 import com.mdd.common.entity.member.Member;
 import com.mdd.common.entity.user.UserBasic;
@@ -119,4 +121,9 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         groupMapper.deleteById(id);
     }
 
+    @Override
+    public List<GroupDTO> listByCondition(GroupQueryCondition queryCondition) {
+        List<Group> list = groupRepo.queryByCondition(queryCondition);
+        return DozerUtils.mapList(list, GroupDTO.class);
+    }
 }

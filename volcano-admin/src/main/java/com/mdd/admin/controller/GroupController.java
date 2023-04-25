@@ -8,6 +8,7 @@ import com.mdd.admin.service.IGroupService;
 import com.mdd.admin.validate.*;
 import com.mdd.admin.validate.commons.IdValidate;
 import com.mdd.admin.validate.commons.PageValidate;
+import com.mdd.admin.validate.system.condition.GroupQueryCondition;
 import com.mdd.admin.vo.course.CourseTypeDetailVo;
 import com.mdd.admin.vo.course.CourseTypeVo;
 import com.mdd.admin.vo.group.GroupDetailVo;
@@ -37,7 +38,7 @@ public class GroupController {
     @Resource
     private IGroupService iGroupService;
     /**
-     * 管理员新增
+     * 小组新增
      * @param createValidate 参数
      * @return AjaxResult<Object>
      */
@@ -48,16 +49,15 @@ public class GroupController {
         return AjaxResult.success();
     }
     /**
-     * 课程类型所有
+     * 小组所有
      *
-     * @author fzr
-     * @return AjaxResult<List<CourseTypeVo>>
+     * @return AjaxResult<List<GroupVo>>
      */
-//    @GetMapping("/all")
-//    public AjaxResult<List<GroupVo>> all() {
-//        List<GroupDTO> list = iGroupService.all();
-//        return AjaxResult.success(DozerUtils.mapList(list, GroupVo.class));
-//    }
+    @GetMapping("/list/condition")
+    public AjaxResult<List<GroupVo>> getListByCondition(GroupQueryCondition queryCondition) {
+        List<GroupDTO> list = iGroupService.listByCondition(queryCondition);
+        return AjaxResult.success(DozerUtils.mapList(list, GroupVo.class));
+    }
 
     /**
      * 小组列表

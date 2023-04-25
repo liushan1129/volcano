@@ -49,8 +49,8 @@ public class MemberRepo {
                 "like:name:str",
                 "=:gender:int",
                 "=:telephone:str",
-                "=:is_end:int",
-                "=:course_type_id:long"
+                "=:isEnd@is_end:int",
+                "=:courseTypeId@course_type_id:long"
         });
 
         IPage<MemberDTO> iPage = memberMapper.selectJoinPage(
@@ -60,7 +60,6 @@ public class MemberRepo {
 
         return iPage;
     }
-
     public Member queryById(Long id) {
         QueryWrapper queryWrapper = new QueryWrapper<CourseType>();
         queryWrapper.eq("id", id);
@@ -90,5 +89,12 @@ public class MemberRepo {
             queryWrapper.like("name", queryCondition.getName());
         }
         return memberMapper.selectList(queryWrapper);
+    }
+
+    public Member queryByName(String memberName) {
+        QueryWrapper queryWrapper = new QueryWrapper<Member>()
+                .eq("name", memberName)
+                .eq("is_delete", 0);
+        return memberMapper.selectOne(queryWrapper);
     }
 }

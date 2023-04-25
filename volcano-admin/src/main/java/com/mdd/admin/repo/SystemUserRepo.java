@@ -46,7 +46,6 @@ public class SystemUserRepo {
 
         userBasicMapper.setSearch(mpjQueryWrapper, searchValidate, new String[]{
                 "like:username:str",
-                "like:enUsername:str",
                 "like:nickname:str"
         });
 
@@ -114,4 +113,11 @@ public class SystemUserRepo {
     }
 
 
+    public UserBasic queryByName(String userName) {
+        QueryWrapper queryWrapper = new QueryWrapper<UserBasic>()
+                .eq("username", userName)
+                .eq("is_delete", 0);
+        return userBasicMapper.selectOne(queryWrapper);
+
+    }
 }

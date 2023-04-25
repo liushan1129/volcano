@@ -1,8 +1,11 @@
 package com.mdd.common.mapper.reservation;
 
+import com.mdd.common.core.basics.IBaseMapper;
 import com.mdd.common.entity.reservation.ReservationRecord;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,6 +16,9 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2023-04-16
  */
 @Mapper
-public interface ReservationRecordMapper extends BaseMapper<ReservationRecord> {
+public interface ReservationRecordMapper extends IBaseMapper<ReservationRecord> {
 
+    void batchInsert(@Param("list") List<ReservationRecord> reservationRecords);
+
+    void batchCancel(@Param("ids") List<Long> reservationRecords, @Param("cancelTime") Long cancelTime);
 }

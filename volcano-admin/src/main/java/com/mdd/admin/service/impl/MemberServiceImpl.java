@@ -26,6 +26,7 @@ import com.mdd.common.util.DozerUtils;
 import com.mdd.common.util.EnumUtils;
 import com.mdd.common.util.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

@@ -7,8 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * <p>
@@ -18,10 +17,8 @@ import lombok.Setter;
  * @author liushan
  * @since 2023-04-16
  */
-@Getter
-@Setter
 @TableName("va_reservation_record")
-@ApiModel(value = "ReservationRecord对象", description = "预约记录表")
+@Data
 public class ReservationRecord implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -34,25 +31,37 @@ public class ReservationRecord implements Serializable {
     @TableField("group_id")
     private Long groupId;
 
-    @ApiModelProperty("预约时间时间")
-    @TableField("reservation_time")
-    private Integer reservationTime;
+    @ApiModelProperty("用户id")
+    @TableField("user_id")
+    private Long userId;
 
-    @ApiModelProperty("状态: 0=完成, 1=取消")
+    @ApiModelProperty("会员id")
+    @TableField("member_id")
+    private String memberId;
+
+    @ApiModelProperty("预约时间")
+    @TableField("reservation_date")
+    private String reservationDate;
+
+    @ApiModelProperty("预约时间")
+    @TableField("reservation_time")
+    private String reservationTime;
+
+    @ApiModelProperty("状态: 0=未开始, 1=取消, 2=完成")
     @TableField("status")
     private Integer status;
 
     @ApiModelProperty("创建时间")
     @TableField("create_time")
-    private Integer createTime;
+    private Long createTime;
 
     @ApiModelProperty("更新时间")
     @TableField("update_time")
-    private Integer updateTime;
+    private Long updateTime;
 
     @ApiModelProperty("取消时间")
     @TableField("cancel_time")
-    private Integer cancelTime;
+    private Long cancelTime;
 
 
 }

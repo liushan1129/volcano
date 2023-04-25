@@ -18,7 +18,7 @@ public class GroupVo implements Serializable {
     private String name;
 
     private Long userId;
-    private String userName;
+    private String username;
 
     private String memberIds;
     private String memberNames;

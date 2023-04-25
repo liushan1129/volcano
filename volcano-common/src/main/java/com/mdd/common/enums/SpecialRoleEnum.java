@@ -36,4 +36,13 @@ public enum SpecialRoleEnum {
     public String getName() {
         return this.name;
     }
+
+    public static SpecialRoleEnum valueOfCode(int code) {
+        for (SpecialRoleEnum value : SpecialRoleEnum.values()) {
+            if (value.getCode() == code) {
+                return value;
+            }
+        }
+        return null;
+    }
 }
